@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Add a polygon to a map using a GeoJSON source</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
+<style>
+body { margin: 0; padding: 0; }
+#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1IjoibXlkLWRlc2Fycm9sbG8iLCJhIjoibDhDbVBvTSJ9.06AuOOIePkwW87qmoLTc7g';
+    const map = new mapboxgl.Map({
+        container: 'map', // container ID
+        // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+        style: 'mapbox://styles/mapbox/light-v10', // style URL
+        center: [-73.7940563, 5.0688758], // starting position
+        zoom: 16 // starting zoom
+    });
+
+    map.on('load', () => {
+        // Add a data source containing GeoJSON data.
+        map.addSource("cuadros", {
+            'type': 'geojson',
+            'data': "https://api.placemark.io/api/v1/map/kpfzyO5h55U5ERIvde1Lf/featurecollection",
+        });
+
+        // Add a new layer to visualize the polygon.
+        map.addLayer({
+            'id': 'cuadros',
+            'type': 'fill',
+            'source': 'cuadros', // reference the data source
+            'layout': {},
+            'paint': 
+                {
+                    "fill-opacity": [
+                        "coalesce",
+                        [
+                        "get",
+                        "fill-opacity"
+                        ],
+                        0.1
+                    ],
+                    "fill-color": [
+                        "coalesce",
+                        [
+                        "get",
+                        "fill"
+                        ],
+                        [
+                        "match",
+                        [
+                            "get",
+                            "co"
+                        ],
+                        0,
+                        "#66C5CC",
+                        1,
+                        "#F6CF71",
+                        2,
+                        "#F89C74",
+                        3,
+                        "#DCB0F2",
+                        "#312E81"
+                        ]
+                    ]
+                }       
+        });
+        // Add a black outline around the polygon.
+  
+        //
+    });
+</script>
+
+</body>
+</html>
